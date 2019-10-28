@@ -3,30 +3,22 @@
 function handleClick() {
   $("form").submit(event, function() {
   event.preventDefault();
-  let breed = $(".breed").val().trim();
+  const breed = $(".breed").val().trim();
   const url = `https://dog.ceo/api/breed/${breed}/images/random`
-  const options = {
-    headers: new Headers({
-      "mode": "no-cors"})
-  };
 
-  fetch (url, options)
-  .then(response => { 
-    if (response.ok) {
-      return response.json();
-    } throw new Error(response.statusText);
-  })
-  .then(responseJson => displayImages(responseJson.message))
-  .catch(error => displayError(error.message))
+fetch (url)
+  .then(response => response.json())
+  .then(responseJson => displayImages(responseJson.message, breed))
+  .catch(error => displayError(error.statusText))
   }) 
 }
 
-function displayImages(arr) {
+function displayImages(img, breed) {
   let displayArea = $('.display-results');
 
   displayArea.removeClass("hidden");
-  displayArea.html(`<h2>Your Dogs</h2>
-                    <img src="${img}" class="dog-img">`);
+  displayArea.html(`<h2>Here is your ${breed}</h2>
+                    <img src="${img}" class="dog-img" alt="${breed} dog">`);
 }
 
 function displayError(errorMsg) {
@@ -35,10 +27,6 @@ function displayError(errorMsg) {
   displayArea.removeClass("hidden");
   displayArea.html(`<h2>An error occured</h2>
                     <p>${errorMsg}</p>`);
-}
-
-function printToConsole(msg) {
-  console.log(`${msg}`);
 }
 
 $(handleClick);
