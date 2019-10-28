@@ -3,15 +3,22 @@
 function handleClick() {
   $("form").submit(event, function() {
   event.preventDefault();
-  let breed = $(".breed").val();
-  fetch (`https://dog.ceo/api/breed/${breed}/images/random/`)
-  .then(response => response.json())
-  .then(responseJson => {
-          console.log(`${responseJson.message}`)
-          displayImages(responseJson.message);
-          })
+  let breed = $(".breed").val().trim();
+  const url = `https://dog.ceo/api/breed/${breed}/images/random`
+  const options = {
+    headers: new Headers({
+      "mode": "no-cors"})
+  };
+
+  fetch (url, options)
+  .then(response => { 
+    if (response.ok) {
+      return response.json();
+    } throw new Error(response.statusText);
+  })
+  .then(responseJson => displayImages(responseJson.message))
   .catch(error => displayError(error.message))
-})
+  }) 
 }
 
 function displayImages(arr) {
@@ -24,7 +31,7 @@ function displayImages(arr) {
 
 function displayError(errorMsg) {
   let displayArea = $('.display-results');
-  
+
   displayArea.removeClass("hidden");
   displayArea.html(`<h2>An error occured</h2>
                     <p>${errorMsg}</p>`);
