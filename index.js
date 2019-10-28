@@ -23,6 +23,8 @@ function displayImages(arr) {
 }
 
 function displayError(errorMsg) {
+  let displayArea = $('.display-results');
+  
   displayArea.removeClass("hidden");
   displayArea.html(`<h2>An error occured</h2>
                     <p>${errorMsg}</p>`);
